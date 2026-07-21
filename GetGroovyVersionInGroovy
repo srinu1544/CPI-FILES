@@ -1,0 +1,11 @@
+import com.sap.gateway.ip.core.customdev.util.Message
+
+def Message processData(Message message) {
+    // Get Groovy version
+    def groovyVersion = GroovySystem.version
+
+    // Set Groovy version as body (or as property/header if needed)
+    message.setBody("Groovy Runtime Version in CPI: ${groovyVersion}")
+
+    return message
+}

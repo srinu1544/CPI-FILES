@@ -1,0 +1,41 @@
+import com.sap.gateway.ip.core.customdev.util.Message;
+import com.sap.it.api.mapping.*;
+import com.sap.it.api.ITApiFactory
+import com.sap.it.api.mapping.ValueMappingApi
+def void valueMapping2(String[] queue1, String[] queue2, Output output)
+{
+    if (queue1 != null && queue1.length > 0)
+         {
+			 for (int i = 0; i < queue1.length; i++)
+               {
+			      if(queue1[i] == "ECC")
+			        {
+                   def service = ITApiFactory.getApi(ValueMappingApi.class, null);
+			       def productValue = service.getMappedValue("ECC", "ERP SYSTEM",queue2[i], "S4H", "S4HANA SYSTEM");
+			        output.addValue(productValue);
+			        }
+        			 else if(queue1[i] == "SF")
+			            {
+		                    def service = ITApiFactory.getApi(ValueMappingApi.class, null);
+			                def productValue = service.getMappedValue("SF", "SALES FORCE SYSTEM",queue2[i], "S4H", "S4HANA SYSTEM");
+			                output.addValue(productValue);
+			            }
+			          else if(queue1[i] == "S4H")
+		            	    {
+			                def service = ITApiFactory.getApi(ValueMappingApi.class, null);
+		                	def productValue = service.getMappedValue("S4H","S4HANA SYSTEM",queue2[i],"ECC", "ERP SYSTEM");
+		                	output.addValue(productValue);
+			            }
+			            else
+		            	{
+			         	output.addValue("No Product Found");
+
+                        }
+               }
+		}
+   else
+        {
+            output.addSuppress();
+         }
+
+}

@@ -1,0 +1,19 @@
+import com.sap.gateway.ip.core.customdev.util.Message
+
+def Message processData(Message message) {
+    def messageLog = messageLogFactory.getMessageLog(message);
+
+    if (messageLog != null) {
+        // Read IDoc number from Header
+        def IDOCNUM = message.getHeaders().get("IDOCNUM");       //  from header
+        def PROPERTY = message.getProperties().get("error");    // from properities
+
+        // Set IDoc number as Custom Header
+        if (IDOCNUM != null && PROPERTY!= null) {
+            messageLog.addCustomHeaderProperty("IDOCNUM", IDOCNUM);
+            messageLog.addCustomHeaderProperty("custom property", PROPERTY);
+        }
+    }
+
+    return message;
+}

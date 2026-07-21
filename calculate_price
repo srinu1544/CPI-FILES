@@ -1,0 +1,193 @@
+import com.sap.gateway.ip.core.customdev.util.Message;
+def Message processData(Message message)
+{
+def body = message.getBody(java.lang.String);
+Parse XML into a document tree that may be traversed similar to XPath expressions.
+def root = new XmlSlurper().parseText(body)
+def cnt = root.'*'.size()
+for (i=0;i<cnt;i++)
+{
+   price = root.Order[i].PRICE.text()
+   qty = root.Order[i].ORDQTY.text()
+   value = price.toInteger() * qty.toInteger()
+   AMT = "<AMOUNT>"+value+"</AMOUNT>"
+   newNode = new XmlSlurper().parseText( AMT )
+   root.Order[i].appendNode( newNode );
+}
+    String outxml = groovy.xml.XmlUtil.serialize( root );
+    message.setBody(outxml);
+     return message;
+}
+
+
+
+<root>
+  <Order>
+    <ORDID>10250</ORDID>
+    <ORDAT>01.09.2023</ORDAT>
+    <REQDAT>30.09.2023</REQDAT>
+    <CUSTID>101</CUSTID>
+    <MATID>M100</MATID>
+    <EMPID>E101</EMPID>
+    <ORDQTY>100</ORDQTY>
+    <UNIT>EA</UNIT>
+    <PRICE>300</PRICE>
+    <CURRENCY>USD</CURRENCY>
+    <CALYEAR>2023</CALYEAR>
+    <STATUS>NO</STATUS>
+  </Order>
+  <Order>
+    <ORDID>10251</ORDID>
+    <ORDAT>01.09.2023</ORDAT>
+    <REQDAT>10.09.2023</REQDAT>
+    <CUSTID>100</CUSTID>
+    <MATID>M102</MATID>
+    <EMPID>E102</EMPID>
+    <ORDQTY>300</ORDQTY>
+    <UNIT>EA</UNIT>
+    <PRICE>200</PRICE>
+    <CURRENCY>USD</CURRENCY>
+    <CALYEAR>2023</CALYEAR>
+	<STATUS>NO</STATUS>
+  </Order>
+  <Order>
+    <ORDID>10252</ORDID>
+    <ORDAT>01.10.2023</ORDAT>
+    <REQDAT>12.10.2023</REQDAT>
+    <CUSTID>102</CUSTID>
+    <MATID>M103</MATID>
+    <EMPID>E103</EMPID>
+    <ORDQTY>100</ORDQTY>
+    <UNIT>EA</UNIT>
+    <PRICE>150</PRICE>
+    <CURRENCY>AUD</CURRENCY>
+    <CALYEAR>2023</CALYEAR>
+	<STATUS>NO</STATUS>
+  </Order>
+  <Order>
+    <ORDID>10253</ORDID>
+    <ORDAT>01.09.2023</ORDAT>
+    <REQDAT>21.10.2023</REQDAT>
+    <CUSTID>105</CUSTID>
+    <MATID>M102</MATID>
+    <EMPID>E104</EMPID>
+    <ORDQTY>200</ORDQTY>
+    <UNIT>EA</UNIT>
+    <PRICE>300</PRICE>
+    <CURRENCY>AUD</CURRENCY>
+    <CALYEAR>2023</CALYEAR>
+	<STATUS>NO</STATUS>
+  </Order>
+  <Order>
+    <ORDID>10254</ORDID>
+    <ORDAT>01.09.2023</ORDAT>
+    <REQDAT>10.09.2023</REQDAT>
+    <CUSTID>103</CUSTID>
+    <MATID>M105</MATID>
+    <EMPID>E105</EMPID>
+    <ORDQTY>200</ORDQTY>
+    <UNIT>EA</UNIT>
+    <PRICE>250</PRICE>
+    <CURRENCY>USD</CURRENCY>
+    <CALYEAR>2023</CALYEAR>
+	<STATUS>NO</STATUS>
+  </Order>
+  <Order>
+    <ORDID>10255</ORDID>
+    <ORDAT>01.09.2022</ORDAT>
+    <REQDAT>20.11.2022</REQDAT>
+    <CUSTID>102</CUSTID>
+    <MATID>M103</MATID>
+    <EMPID>E106</EMPID>
+    <ORDQTY>200</ORDQTY>
+    <UNIT>EA</UNIT>
+    <PRICE>150</PRICE>
+    <CURRENCY>USD</CURRENCY>
+    <CALYEAR>2022</CALYEAR>
+	<STATUS>NO</STATUS>
+  </Order>
+  <Order>
+    <ORDID>10256</ORDID>
+    <ORDAT>01.09.2022</ORDAT>
+    <REQDAT>15.10.2022</REQDAT>
+    <CUSTID>100</CUSTID>
+    <MATID>M102</MATID>
+    <EMPID>E107</EMPID>
+    <ORDQTY>400</ORDQTY>
+    <UNIT>EA</UNIT>
+    <PRICE>300</PRICE>
+    <CURRENCY>USD</CURRENCY>
+    <CALYEAR>2022</CALYEAR>
+	<STATUS>NO</STATUS>
+  </Order>
+  <Order>
+    <ORDID>10257</ORDID>
+    <ORDAT>01.09.2023</ORDAT>
+    <REQDAT>05.10.2023</REQDAT>
+    <CUSTID>101</CUSTID>
+    <MATID>M101</MATID>
+    <EMPID>E107</EMPID>
+    <ORDQTY>100</ORDQTY>
+    <UNIT>EA</UNIT>
+    <PRICE>200</PRICE>
+    <CURRENCY>USD</CURRENCY>
+    <CALYEAR>2023</CALYEAR>
+	<STATUS>NO</STATUS>
+  </Order>
+  <Order>
+    <ORDID>10258</ORDID>
+    <ORDAT>01.09.2023</ORDAT>
+    <REQDAT>20.12.2023</REQDAT>
+    <CUSTID>102</CUSTID>
+    <MATID>M100</MATID>
+    <EMPID>E108</EMPID>
+    <ORDQTY>200</ORDQTY>
+    <UNIT>EA</UNIT>
+    <PRICE>200</PRICE>
+    <CURRENCY>EUR</CURRENCY>
+    <CALYEAR>2023</CALYEAR>
+	<STATUS>NO</STATUS>
+  </Order>
+  <Order>
+    <ORDID>10259</ORDID>
+    <ORDAT>01.09.2023</ORDAT>
+    <REQDAT>20.10.2023</REQDAT>
+    <CUSTID>102</CUSTID>
+    <MATID>M106</MATID>
+    <EMPID>E109</EMPID>
+    <ORDQTY>300</ORDQTY>
+    <UNIT>EA</UNIT>
+    <PRICE>300</PRICE>
+    <CURRENCY>AUD</CURRENCY>
+    <CALYEAR>2023</CALYEAR>
+	<STATUS>NO</STATUS>
+  </Order>
+  <Order>
+    <ORDID>10260</ORDID>
+    <ORDAT>01.09.2023</ORDAT>
+    <REQDAT>25.10.2023</REQDAT>
+    <CUSTID>102</CUSTID>
+    <MATID>M106</MATID>
+    <EMPID>E110</EMPID>
+    <ORDQTY>300</ORDQTY>
+    <UNIT>EA</UNIT>
+    <PRICE>300</PRICE>
+    <CURRENCY>AUD</CURRENCY>
+    <CALYEAR>2023</CALYEAR>
+	<STATUS>NO</STATUS>
+  </Order>
+  <Order>
+    <ORDID>10261</ORDID>
+    <ORDAT>01.09.2022</ORDAT>
+    <REQDAT>15.10.2022</REQDAT>
+    <CUSTID>102</CUSTID>
+    <MATID>M106</MATID>
+    <EMPID>E111</EMPID>
+    <ORDQTY>300</ORDQTY>
+    <UNIT>EA</UNIT>
+    <PRICE>300</PRICE>
+    <CURRENCY>AUD</CURRENCY>
+    <CALYEAR>2022</CALYEAR>
+	<STATUS>YES</STATUS>
+  </Order>
+</root>

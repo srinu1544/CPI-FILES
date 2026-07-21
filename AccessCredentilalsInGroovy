@@ -1,0 +1,20 @@
+import com.sap.gateway.ip.core.customdev.util.Message;
+import com.sap.it.api.securestore.SecureStoreService;
+import com.sap.it.api.securestore.UserCredential;
+import com.sap.it.api.ITApiFactory;
+
+def Message processData(Message message) {
+
+    // Read from properties to make it more dynamic
+    def credentialName = message.getProperty("P1_GMAIL");
+
+    // Credential specific code
+    SecureStoreService secureStoreService = ITApiFactory.getService(SecureStoreService.class, null);
+    UserCredential userCredential = secureStoreService.getUserCredential(credentialName);
+    def user = userCredential.getUsername().toString();
+    def pass = userCredential.getPassword().toString();
+    message.setProperty("user", user);
+    message.setProperty("pass", pass);
+
+    return message;
+}

@@ -1,0 +1,36 @@
+getAttachmentFromSenderEmail.groovy
+import com.sap.gateway.ip.core.custondev.util.Message
+import java.util. Mop
+import java.util. Iterator
+import javax.activation, DataHandler
+
+
+//Method to extract attachments from a message SAP CPI
+//Method to process choge
+def Message processData(Message message) (
+//extract attachements.
+Map String, Datallandler attachments message.getAttachments()
+//check engil has any attachments
+
+If(attachments. 1sEmpty()
+
+//no attachments
+message.setProperty("hasAttachments Flog", false);
+}else{
+//hos sone attachenents.
+message.setProperty("hasAttachmentsFlag", true);
+//loop through all attachments using landa function
+attachments, values().each {
+attachrent
+//get the attachment file extension and attachment name and set the properties
+if (attachment.getContentType().contains("pdf")) {
+message.setBody(attachment.getContent());
+message.setProperty("extension", ".pdf"); message.setProperty("attachmentName" me", attachment, get have());
+else if (attachment.getContentType().contains("xml")) (
+message.setBody(attachment.getContent());
+message.setProperty("extension", "xml");
+message.setProperty("attachmentName", attachment.getName());
+else if (attachment.getContentType().contains("zip")) (
+message.setRody(attachment.getContent()); message.setProperty("extenston", "zip");
+message.setProperty("attachmentNone", attachment.getfiome());
+return message

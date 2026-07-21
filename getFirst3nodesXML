@@ -1,0 +1,95 @@
+import com.sap.gateway.ip.core.customdev.util.Message
+import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
+import javax.xml.transform.OutputKeys
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+import java.io.StringReader
+import java.io.StringWriter
+import org.xml.sax.InputSource
+
+def Message processData(Message message) {
+    def body = message.getBody(String)
+
+    // 1. Parse the input XML
+    def dbFactory = DocumentBuilderFactory.newInstance()
+    def dBuilder = dbFactory.newDocumentBuilder()
+    def inputDoc = dBuilder.parse(new InputSource(new StringReader(body)))
+
+    // 2. Get Item nodes
+    def itemNodes = inputDoc.getElementsByTagName("Item")
+    int count = Math.min(itemNodes.getLength(), 3)
+
+    // 3. Create new output XML Document
+    def outputDoc = dBuilder.newDocument()
+    def rootElement = outputDoc.createElement("Root")
+    def itemsElement = outputDoc.createElement("Items")
+    outputDoc.appendChild(rootElement)
+    rootElement.appendChild(itemsElement)
+
+    // 4. Append first 3 Item elements
+    for (int i = 0; i < count; i++) {
+        def importedNode = outputDoc.importNode(itemNodes.item(i), true)
+        itemsElement.appendChild(importedNode)
+    }
+
+    // 5. Serialize the new XML
+    def transformer = TransformerFactory.newInstance().newTransformer()
+    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no")
+    transformer.setOutputProperty(OutputKeys.INDENT, "yes")
+
+    def writer = new StringWriter()
+    transformer.transform(new DOMSource(outputDoc), new StreamResult(writer))
+    def newXml = writer.toString()
+
+    message.setBody(newXml)
+    return message
+}
+
+
+
+input :
+
+<Root>
+    <Items>
+        <Item>
+            <ID>1</ID>
+            <Name>Item One</Name>
+        </Item>
+        <Item>
+            <ID>2</ID>
+            <Name>Item Two</Name>
+        </Item>
+        <Item>
+            <ID>3</ID>
+            <Name>Item Three</Name>
+        </Item>
+        <Item>
+            <ID>4</ID>
+            <Name>Item Four</Name>
+        </Item>
+    </Items>
+</Root>
+
+
+
+output :
+<?xml version="1.0" encoding="UTF-8"?>
+<Root>
+   <Items>
+      <Item>
+         <ID>1</ID>
+         <Name>Item One</Name>
+      </Item>
+      <Item>
+         <ID>2</ID>
+         <Name>Item Two</Name>
+      </Item>
+      <Item>
+         <ID>3</ID>
+         <Name>Item Three</Name>
+      </Item>
+   </Items>
+</Root>

@@ -1,0 +1,17 @@
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns8="http://sap.com/xi/XI/SplitAndMerge">
+  <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
+  <!-- Root transformation -->
+  <xsl:template match="/">
+    <ns8:Messages>
+      <!-- wrap the existing ZBCMATMAS05 data and copy it directly -->
+      <!-- Copy the entire ZBCMATMAS05-structure as is -->
+      <xsl:copy-of select="/ZBCMATMAS05"/>
+    </ns8:Messages>
+  </xsl:template>
+  <!-- Generic template to copy elements as is -->
+  <xsl:template match="*">
+    <xsl:element name="{local-name()}">
+      <xsl:copy-of select="."/>
+    </xsl:element>
+  </xsl:template>
+</xsl:stylesheet>

@@ -1,0 +1,15 @@
+import com.sap.gateway.ip.core.customdev.util.Message;
+import com.sap.it.api.ITApiFactory;
+import com.sap.it.api.nr.NumberRangeConfigurationService;
+
+def Message processData(Message message) {
+
+    def service = ITApiFactory.getApi(NumberRangeConfigurationService.class, null);
+    if( service != null) {
+        // Get next value from number range configured in web tooling.
+        def nextValue = service.getNextValueFromNumberRange("NR1", null);
+        message.setProperty("P1_RNRV", nextValue) as String;
+    }
+
+    return message;
+}

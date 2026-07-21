@@ -1,0 +1,24 @@
+import com.sap.gateway.ip.core.customdev.util.Message;
+import com.sap.it.api.ITApiFactory
+import com.sap.it.api.mapping.ValueMappingApi
+
+def Message processData(Message message) {
+    def service = ITApiFactory.getApi(ValueMappingApi.class, null);
+    if( service != null){
+        def properties = message.getProperties();
+        propertyValue = properties.get("myProperty");
+        def productValue = service.getMappedValue("ECC", "ERP SYSTEM", propertyValue, "S4H", "S4HANA SYSTEM");
+        message.setProperty("myProperty", productValue);
+        def messageLog = messageLogFactory.getMessageLog(message);
+        if (messageLog != null ) {
+            if ( productValue != null ){
+                messageLog.setStringProperty("Information","The transformed locale value is : " + productValue);
+                messageLog.addAttachmentAsString("Output : Target Value Mapping is ", productValue, "text/plain");
+            }
+            else{
+                messageLog.addAttachmentAsString("Output : Target Value Mapping is ", "Not Found", "text/plain");
+            }
+        }
+    }
+    return message;
+}

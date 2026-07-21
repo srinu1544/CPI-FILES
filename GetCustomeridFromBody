@@ -1,0 +1,11 @@
+import com.sap.gateway.ip.core.customdev.util.Message
+
+def Message processData(Message message) {
+    def body = message.getBody(String)
+    def xml = new XmlSlurper().parseText(body)
+
+    def customerId = xml.Customer.CustomerID.text()
+    message.setProperty("CustomerID", customerId)
+
+    return message
+}
